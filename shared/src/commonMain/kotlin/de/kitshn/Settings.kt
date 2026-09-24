@@ -49,6 +49,8 @@ const val KEY_SETTINGS_BEHAVIOR_PROPERTIES_SHOW_FRACTIONAL_VALUES =
     "behavior_properties_show_fractional_values"
 const val KEY_SETTINGS_BEHAVIOR_KEEP_SCREEN_ON_IN_RECIPE_DETAILS =
     "behavior_keep_screen_on_in_recipe_details"
+const val KEY_SETTINGS_BEHAVIOR_COOKING_MODE_MAXIMUM_FONT_SIZE =
+    "behavior_cooking_mode_maximum_font_size"
 const val KEY_SETTINGS_BEHAVIOR_HIDE_FUNDING_BANNER_UNTIL =
     "behavior_hide_funding_banner_until"
 
@@ -241,6 +243,13 @@ class SettingsViewModel : ViewModel() {
 
     fun setKeepScreenOnInRecipeDetails(keepScreenOn: Boolean) =
         obs.putBoolean(KEY_SETTINGS_BEHAVIOR_KEEP_SCREEN_ON_IN_RECIPE_DETAILS, keepScreenOn)
+
+    val getCookingModeMaximumFontSize: Flow<Int> =
+        obs.getIntOrNullFlow(KEY_SETTINGS_BEHAVIOR_COOKING_MODE_MAXIMUM_FONT_SIZE)
+            .map { (it ?: 44).coerceIn(18, 44) }
+
+    fun setCookingModeMaximumFontSize(fontSize: Int) =
+        obs.putInt(KEY_SETTINGS_BEHAVIOR_COOKING_MODE_MAXIMUM_FONT_SIZE, fontSize.coerceIn(18, 44))
 
     val getFundingBannerHideUntil: Flow<Long> =
         obs.getLongFlow(KEY_SETTINGS_BEHAVIOR_HIDE_FUNDING_BANNER_UNTIL, -1L)

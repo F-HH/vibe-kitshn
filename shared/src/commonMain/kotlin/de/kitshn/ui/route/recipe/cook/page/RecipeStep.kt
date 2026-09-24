@@ -72,7 +72,8 @@ fun RouteRecipeCookPageStep(
     recipe: TandoorRecipe,
     step: TandoorStep,
     servingsFactor: Double,
-    showFractionalValues: Boolean
+    showFractionalValues: Boolean,
+    maximumFontSize: Int
 ) {
     val coroutineScope = rememberCoroutineScope()
     val fetchRequestState = rememberTandoorRequestState()
@@ -96,13 +97,20 @@ fun RouteRecipeCookPageStep(
             val density = LocalDensity.current
 
             val textMeasurer = rememberTextMeasurer()
-            var fontSize by remember { mutableStateOf(14.sp) }
+            var fontSize by remember { mutableStateOf(18.sp) }
 
             val maxWidthPx = with(density) { maxWidth.roundToPx() }
-            LaunchedEffect(step.instruction, sideBySideLayout) {
+            LaunchedEffect(
+                step.instruction,
+                sideBySideLayout,
+                maxWidthPx,
+                maxHeightPx,
+                maximumFontSize
+            ) {
                 var newFontSize = 18
+                var fittingFontSize = newFontSize
 
-                while(newFontSize < 44) {
+                while(newFontSize <= maximumFontSize) {
                     val textLayout = textMeasurer.measure(
                         text = step.instruction,
                         style = TextStyle(
@@ -115,10 +123,11 @@ fun RouteRecipeCookPageStep(
                     )
 
                     if(textLayout.size.height > maxHeightPx) break
+                    fittingFontSize = newFontSize
                     newFontSize += 2
                 }
 
-                fontSize = newFontSize.sp
+                fontSize = fittingFontSize.sp
             }
 
             Column(
@@ -163,8 +172,8 @@ fun RouteRecipeCookPageStep(
     ) {
         val density = LocalDensity.current
 
-        val maxHeightPx = with(density) { maxWidth.roundToPx() }
-        val maxHeight = maxHeight
+        val availableHeight = maxHeight
+        val maxHeightPx = with(density) { availableHeight.roundToPx() }
 
         val statusBarHeight = with(density) {
             WindowInsets.statusBars
@@ -217,7 +226,7 @@ fun RouteRecipeCookPageStep(
                     rightMinWidth = 300.dp,
                     rightMaxWidth = 300.dp,
                     leftMinWidth = 300.dp,
-                    disable = maxHeight > 800.dp || disableSideBySideLayout,
+                    disable = availableHeight > 800.dp || disableSideBySideLayout,
                     leftLayout = {
                         StepBody(
                             if(it) (maxHeightPx / 2.5f).roundToInt() else maxHeightPx,

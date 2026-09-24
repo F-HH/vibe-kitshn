@@ -28,6 +28,11 @@ import org.jetbrains.compose.resources.getString
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+private val keepScreenOnResource = ReferenceCountedResource<Window>(
+    onFirstAcquire = { it.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) },
+    onLastRelease = { it.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) }
+)
+
 tailrec fun Context.getActivityWindow(): Window? =
     when (this) {
         is Activity -> window
@@ -57,12 +62,12 @@ actual fun BackHandler(enabled: Boolean, handler: () -> Unit) {
 actual fun KeepScreenOn() {
     val context = LocalContext.current
 
-    DisposableEffect(Unit) {
+    DisposableEffect(context) {
         val window = context.getActivityWindow()
-        window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        if(window != null) keepScreenOnResource.acquire(window)
 
         onDispose {
-            window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            if(window != null) keepScreenOnResource.release(window)
         }
     }
 }

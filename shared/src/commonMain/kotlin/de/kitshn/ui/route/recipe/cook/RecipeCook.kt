@@ -62,6 +62,8 @@ fun RouteRecipeCook(
 
     val ingredientsShowFractionalValues =
         p.vm.settings.getIngredientsShowFractionalValues.collectAsState(initial = true)
+    val maximumFontSize =
+        p.vm.settings.getCookingModeMaximumFontSize.collectAsState(initial = 44)
 
     var recipe by remember { mutableStateOf<TandoorRecipe?>(null) }
     LaunchedEffect(recipeId) {
@@ -140,7 +142,8 @@ fun RouteRecipeCook(
                         recipe = recipe!!,
                         step = step,
                         servingsFactor = servingsFactor,
-                        showFractionalValues = ingredientsShowFractionalValues.value
+                        showFractionalValues = ingredientsShowFractionalValues.value,
+                        maximumFontSize = maximumFontSize.value
                     )
                 }
             }

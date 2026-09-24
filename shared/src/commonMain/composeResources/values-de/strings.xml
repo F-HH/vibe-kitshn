@@ -352,6 +352,9 @@
     <string name="settings_section_behavior_ios_install_timer_shortcut_label">iOS-Timer-Kurzbefehl installieren</string>
     <string name="settings_section_behavior_keep_screen_on_in_recipe_details_description">Verhindert, dass der Bildschirm beim Ansehen von Rezeptdetails in den Ruhezustand wechselt – genau wie im Kochmodus</string>
     <string name="settings_section_behavior_keep_screen_on_in_recipe_details_label">Bildschirm in Rezeptübersicht eingeschaltet lassen</string>
+    <string name="settings_section_behavior_cooking_mode_font_size_description">Begrenzt, wie groß kurze Kochschritte dargestellt werden</string>
+    <string name="settings_section_behavior_cooking_mode_font_size_label">Maximale Schriftgröße im Kochmodus</string>
+    <string name="settings_section_behavior_cooking_mode_font_size_value">%1$d sp</string>
     <string name="settings_section_behavior_shopping_item_double_click_check_label">Einkäufe per Doppelklick abhaken</string>
     <string name="settings_section_behavior_shopping_item_double_click_check_description">Einkaufslisteneinträge durch schnelles Doppelklicken als erledigt markieren</string>
     <string name="settings_section_behavior_label">Verhalten</string>

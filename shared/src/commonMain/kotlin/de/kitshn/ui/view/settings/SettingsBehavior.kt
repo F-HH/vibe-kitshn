@@ -1,6 +1,7 @@
 package de.kitshn.ui.view.settings
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ViewList
 import androidx.compose.material.icons.rounded.Campaign
 import androidx.compose.material.icons.rounded.DynamicFeed
+import androidx.compose.material.icons.rounded.FormatSize
 import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.Numbers
 import androidx.compose.material.icons.rounded.Schedule
@@ -22,22 +24,30 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import de.kitshn.KitshnViewModel
 import de.kitshn.ui.component.buttons.BackButton
+import de.kitshn.ui.component.settings.SettingsListItem
 import de.kitshn.ui.component.settings.SettingsListItemPosition
 import de.kitshn.ui.component.settings.SettingsSwitchListItem
 import de.kitshn.ui.view.ViewParameters
 import kitshn.shared.generated.resources.Res
+import kitshn.shared.generated.resources.settings_section_behavior_cooking_mode_font_size_description
+import kitshn.shared.generated.resources.settings_section_behavior_cooking_mode_font_size_label
+import kitshn.shared.generated.resources.settings_section_behavior_cooking_mode_font_size_value
 import kitshn.shared.generated.resources.settings_section_behavior_enable_compact_home_screen_description
 import kitshn.shared.generated.resources.settings_section_behavior_enable_compact_home_screen_label
 import kitshn.shared.generated.resources.settings_section_behavior_enable_dynamic_home_screen_description
@@ -61,6 +71,7 @@ import kitshn.shared.generated.resources.settings_section_behavior_use_share_wra
 import kitshn.shared.generated.resources.settings_section_behavior_use_share_wrapper_label
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -103,6 +114,8 @@ fun ViewSettingsBehavior(
 
         val behaviorKeepScreenOnInRecipeDetails =
             p.vm.settings.getKeepScreenOnInRecipeDetails.collectAsState(initial = false)
+        val cookingModeMaximumFontSize =
+            p.vm.settings.getCookingModeMaximumFontSize.collectAsState(initial = 44)
 
         LazyColumn(
             modifier = Modifier
@@ -141,6 +154,45 @@ fun ViewSettingsBehavior(
                         p.vm.settings.setHideIngredientAllocationActionChips(it)
                     }
                 }
+            }
+
+            item {
+                Spacer(Modifier.height(16.dp))
+            }
+
+            item {
+                var sliderValue by remember(cookingModeMaximumFontSize.value) {
+                    mutableFloatStateOf(cookingModeMaximumFontSize.value.toFloat())
+                }
+
+                SettingsListItem(
+                    position = SettingsListItemPosition.SINGULAR,
+                    label = { Text(stringResource(Res.string.settings_section_behavior_cooking_mode_font_size_label)) },
+                    description = {
+                        Column {
+                            Text(stringResource(Res.string.settings_section_behavior_cooking_mode_font_size_description))
+                            Slider(
+                                value = sliderValue,
+                                onValueChange = { sliderValue = it },
+                                onValueChangeFinished = {
+                                    p.vm.settings.setCookingModeMaximumFontSize(sliderValue.roundToInt())
+                                },
+                                valueRange = 18f..44f,
+                                steps = 12
+                            )
+                        }
+                    },
+                    icon = Icons.Rounded.FormatSize,
+                    contentDescription = stringResource(Res.string.settings_section_behavior_cooking_mode_font_size_label),
+                    trailingContent = {
+                        Text(
+                            stringResource(
+                                Res.string.settings_section_behavior_cooking_mode_font_size_value,
+                                sliderValue.roundToInt()
+                            )
+                        )
+                    }
+                )
             }
 
             item {
