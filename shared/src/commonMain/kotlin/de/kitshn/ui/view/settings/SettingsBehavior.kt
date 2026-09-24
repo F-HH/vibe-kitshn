@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalTime::class)
-
 package de.kitshn.ui.view.settings
 
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +16,6 @@ import androidx.compose.material.icons.rounded.Numbers
 import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.ShoppingCartCheckout
-import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.WarningAmber
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,19 +26,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import de.kitshn.KitshnViewModel
-import de.kitshn.Platforms
-import de.kitshn.platformDetails
 import de.kitshn.ui.component.buttons.BackButton
 import de.kitshn.ui.component.settings.SettingsListItemPosition
 import de.kitshn.ui.component.settings.SettingsSwitchListItem
@@ -53,8 +44,6 @@ import kitshn.shared.generated.resources.settings_section_behavior_enable_dynami
 import kitshn.shared.generated.resources.settings_section_behavior_enable_dynamic_home_screen_label
 import kitshn.shared.generated.resources.settings_section_behavior_enable_meal_plan_promotion_description
 import kitshn.shared.generated.resources.settings_section_behavior_enable_meal_plan_promotion_label
-import kitshn.shared.generated.resources.settings_section_behavior_hide_funding_banner_this_year_description
-import kitshn.shared.generated.resources.settings_section_behavior_hide_funding_banner_this_year_label
 import kitshn.shared.generated.resources.settings_section_behavior_hide_ingredient_allocation_action_chip_description
 import kitshn.shared.generated.resources.settings_section_behavior_hide_ingredient_allocation_action_chip_label
 import kitshn.shared.generated.resources.settings_section_behavior_ingredients_show_fractional_values_description
@@ -71,14 +60,7 @@ import kitshn.shared.generated.resources.settings_section_behavior_shopping_item
 import kitshn.shared.generated.resources.settings_section_behavior_use_share_wrapper_description
 import kitshn.shared.generated.resources.settings_section_behavior_use_share_wrapper_label
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -121,9 +103,6 @@ fun ViewSettingsBehavior(
 
         val behaviorKeepScreenOnInRecipeDetails =
             p.vm.settings.getKeepScreenOnInRecipeDetails.collectAsState(initial = false)
-
-        val fundingBannerHideUntil =
-            p.vm.settings.getFundingBannerHideUntil.collectAsState(initial = -1L)
 
         LazyColumn(
             modifier = Modifier
@@ -304,51 +283,6 @@ fun ViewSettingsBehavior(
                 }
             }
 
-            if (platformDetails.platform == Platforms.IOS) {
-                item {
-                    Spacer(Modifier.height(16.dp))
-                }
-
-                item {
-                    var enabled by remember { mutableStateOf(false) }
-                    LaunchedEffect(fundingBannerHideUntil.value) {
-                        val currentYear = Clock.System.now()
-                            .toLocalDateTime(TimeZone.currentSystemDefault())
-                            .year
-                        val year = Instant.fromEpochSeconds(fundingBannerHideUntil.value)
-                            .toLocalDateTime(TimeZone.currentSystemDefault())
-                            .year
-
-                        enabled = currentYear + 1 == year
-                    }
-
-                    SettingsSwitchListItem(
-                        position = SettingsListItemPosition.SINGULAR,
-                        label = { Text(stringResource(Res.string.settings_section_behavior_hide_funding_banner_this_year_label)) },
-                        description = { Text(stringResource(Res.string.settings_section_behavior_hide_funding_banner_this_year_description)) },
-                        icon = Icons.Rounded.VisibilityOff,
-                        contentDescription = stringResource(Res.string.settings_section_behavior_hide_funding_banner_this_year_description),
-                        checked = enabled
-                    ) {
-                        coroutineScope.launch {
-                            if (it) {
-                                val currentYear = Clock.System.now()
-                                    .toLocalDateTime(TimeZone.currentSystemDefault())
-                                    .year
-
-                                // set funding banner hide until to next year
-                                p.vm.settings.setFundingBannerHideUntil(
-                                    LocalDateTime(currentYear + 1, 1, 2, 0, 0, 0)
-                                        .toInstant(TimeZone.currentSystemDefault())
-                                        .epochSeconds
-                                )
-                            } else {
-                                p.vm.settings.setFundingBannerHideUntil(-1)
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 }

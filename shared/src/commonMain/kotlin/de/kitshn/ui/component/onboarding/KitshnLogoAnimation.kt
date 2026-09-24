@@ -16,8 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import de.kitshn.ui.randomBackgroundShape
 import kitshn.shared.generated.resources.Res
-import kitshn.shared.generated.resources.app_name
 import kitshn.shared.generated.resources.ic_logo
+import kitshn.shared.generated.resources.private_app_name
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -45,7 +45,7 @@ fun KitshnLogoAnimation(
                     .height(100.dp)
                     .width(100.dp),
                 painter = painterResource(Res.drawable.ic_logo),
-                contentDescription = stringResource(Res.string.app_name),
+                contentDescription = stringResource(Res.string.private_app_name),
                 tint = LoadingIndicatorDefaults.containedIndicatorColor
             )
         }

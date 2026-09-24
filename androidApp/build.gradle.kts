@@ -27,6 +27,8 @@ android {
 
         applicationId = kitshnAndroidPackageName
 
+        resValue("string", "shortcut_target_package", kitshnAndroidPackageName)
+
         versionName = kitshnVersionName
         versionCode = kitshnVersionCode
 
@@ -67,12 +69,14 @@ android {
             manifestPlaceholders["appIconRound"] = "@mipmap/ic_debug_launcher_round"
 
             applicationIdSuffix = ".debug"
+            resValue("string", "shortcut_target_package", "$kitshnAndroidPackageName.debug")
         }
         create("nightly") {
             manifestPlaceholders["appIcon"] = "@mipmap/ic_nightly_launcher"
             manifestPlaceholders["appIconRound"] = "@mipmap/ic_nightly_launcher_round"
 
             applicationIdSuffix = ".nightly"
+            resValue("string", "shortcut_target_package", "$kitshnAndroidPackageName.nightly")
             versionNameSuffix = "-nightly-$date"
 
             signingConfig = signingConfigs["nightly"]
@@ -94,6 +98,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        resValues = true
     }
 
     androidResources {

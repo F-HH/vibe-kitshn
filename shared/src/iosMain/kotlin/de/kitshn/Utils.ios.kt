@@ -51,11 +51,7 @@ actual fun KeepScreenOn() {
 
 @Composable
 actual fun launchMarketPageHandler(): () -> Unit {
-    val uriHandler = LocalUriHandler.current
-
-    return {
-        uriHandler.openUri(BuildConfig.ABOUT_APPLE_APPSTORE)
-    }
+    return {}
 }
 
 @Composable

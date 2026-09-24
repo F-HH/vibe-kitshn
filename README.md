@@ -1,24 +1,12 @@
-![kitshn (for Tandoor)](/images/title_light.png#gh-light-mode-only)
-![kitshn (for Tandoor)](/images/title_dark.png#gh-dark-mode-only)
----
-![GitHub](https://img.shields.io/github/license/kitshn-app/kitshn?style=for-the-badge&color=e8b616&labelColor=1c140c) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/kitshn-app/kitshn?style=for-the-badge&color=e8b616&labelColor=1c140c)
+# vibe-kitshn
 
-**kitshn** is an unofficial multiplatform client for the self-hostable [Tandoor Recipes](https://github.com/TandoorRecipes/recipes) application. The app is built with **Compose** and **Material 3 Expressive** to deliver a modern, intuitive and responsive user experience. It is developed for Android, iOS and Desktop.
+**vibe-kitshn** is a private Android-focused fork of the GPL-licensed
+[kitshn](https://github.com/kitshn-app/kitshn) client for
+[Tandoor Recipes](https://github.com/TandoorRecipes/recipes).
 
-## 📦 Installation
-
-[<img src="/images/badge_github.png"
-alt="Get it on GitHub"
-height="70">](https://github.com/kitshn-app/kitshn/releases)
-[<img src="/images/badge_fdroid.png"
-alt="Get it on F-Droid"
-height="70">](https://f-droid.org/packages/de.kitshn.android/)
-[<img src="/images/badge_google.png"
-alt="Get it on Google Play"
-height="70">](https://play.google.com/store/apps/details?id=de.kitshn.android)
-[<img src="/images/badge_apple.png"
-alt="Download on the App Store"
-height="70">](https://apps.apple.com/us/app/kitshn-for-tandoor/id6740168361)
+The private package ID is `de.fhh.vibekitshn`, so it can be installed alongside
+the official app. Upstream contact, funding, store and crash-reporting integrations
+are disabled in this fork.
 
 ## 🔑 Certificate Fingerprints (.apk)
 ```

@@ -24,8 +24,8 @@ import de.kitshn.ui.route.RouteParameters
 import de.kitshn.ui.theme.Typography
 import kitshn.shared.generated.resources.Res
 import kitshn.shared.generated.resources.action_next
-import kitshn.shared.generated.resources.app_name
 import kitshn.shared.generated.resources.onboarding_introduction
+import kitshn.shared.generated.resources.private_app_name
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -67,7 +67,7 @@ fun RouteOnboarding(
 
                     Column {
                         Text(
-                            text = stringResource(Res.string.app_name),
+                            text = stringResource(Res.string.private_app_name),
                             style = Typography().displayMedium
                         )
 

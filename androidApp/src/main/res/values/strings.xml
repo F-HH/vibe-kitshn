@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="private_app_name" translatable="false">vibe-kitshn</string>
     <string name="app_name">kitshn</string>
 
     <string name="common_import_recipe">Import recipe</string>

@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalTime::class)
-
 package de.kitshn.ui.route.main.subroute.home
 
 import androidx.compose.foundation.clickable
@@ -8,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -42,11 +39,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import de.kitshn.Platforms
 import de.kitshn.TestTagRepository
 import de.kitshn.api.tandoor.route.TandoorRecipeQueryParametersSortOrder
-import de.kitshn.platformDetails
-import de.kitshn.ui.component.AutoFetchingFundingBanner
 import de.kitshn.ui.component.model.SpaceSwitchIconButton
 import de.kitshn.ui.dialog.recipe.creationandedit.RecipeCreationAndEditDialog
 import de.kitshn.ui.dialog.recipe.creationandedit.rememberRecipeCreationDialogState
@@ -72,11 +66,7 @@ import kitshn.shared.generated.resources.action_remove
 import kitshn.shared.generated.resources.common_sorting
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -180,45 +170,6 @@ fun RouteMainSubrouteHome(
                         }
                     )
 
-                    // showing funding banner on iOS when user isn't subscribed
-                    if(platformDetails.platform == Platforms.IOS && !p.vm.uiState.iosIsSubscribed) {
-                        var showBanner by remember { mutableStateOf(false) }
-
-                        val firstRunTime by p.vm.settings.getFirstRunTime.collectAsState(Long.MAX_VALUE)
-                        val fundingBannerHideUntil by p.vm.settings.getFundingBannerHideUntil.collectAsState(
-                            initial = -1L
-                        )
-
-                        // only show banner one day after first run and if fundingBannerHideUntil is set
-                        LaunchedEffect(firstRunTime, fundingBannerHideUntil) {
-                            val now = Clock.System.now().epochSeconds
-                            showBanner =
-                                (firstRunTime + 24 * 3600) < now && fundingBannerHideUntil < now
-                        }
-
-                        if(showBanner) {
-                            Spacer(Modifier.height(16.dp))
-
-                            AutoFetchingFundingBanner(
-                                Modifier.widthIn(
-                                    min = 100.dp,
-                                    max = 600.dp
-                                ).padding(
-                                    start = 32.dp
-                                ),
-                                onClickSupport = {
-                                    p.vm.navHostController?.navigate("ios/manageSubscription")
-                                },
-                                onDismiss = {
-                                    p.vm.settings.setFundingBannerHideUntil(
-                                        epochSeconds = Clock.System.now()
-                                            .plus(24 * 7, DateTimeUnit.HOUR)
-                                            .epochSeconds
-                                    )
-                                }
-                            )
-                        }
-                    }
                 }
             },
             onClickUser = {

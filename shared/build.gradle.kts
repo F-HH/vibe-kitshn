@@ -150,9 +150,6 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.ktor.client.okhttp)
 
-                implementation(libs.acra.http)
-                implementation(libs.acra.dialog)
-
                 implementation(libs.accompanist.systemuicontroller)
 
                 implementation(libs.androidx.browser)
@@ -229,23 +226,8 @@ buildConfig {
     buildConfigField("PACKAGE_IS_BETA", kitshnIsBeta)
 
     // kitshn.properties
-    buildConfigField("ABOUT_GITHUB", prop.getProperty("about.github"))
-    buildConfigField("ABOUT_GITHUB_NEW_ISSUE", prop.getProperty("about.github.new.issue"))
-    buildConfigField("ABOUT_CONTACT_WEBSITE", prop.getProperty("about.contact.website"))
-    buildConfigField("ABOUT_CONTACT_MAILTO", prop.getProperty("about.contact.mailto"))
-    buildConfigField("ABOUT_APPLE_APPSTORE", prop.getProperty("about.apple.appstore"))
-
-    buildConfigField("ACRA_HTTP_URI", prop.getProperty("acra.http.uri"))
-    buildConfigField("ACRA_HTTP_BASIC_AUTH_LOGIN", prop.getProperty("acra.http.basic.auth.login"))
-    buildConfigField(
-        "ACRA_HTTP_BASIC_AUTH_PASSWORD",
-        prop.getProperty("acra.http.basic.auth.password")
-    )
-
     buildConfigField("SHARE_WRAPPER_URL", prop.getProperty("share.wrapper.url"))
 
-    buildConfigField("FUNDING_API", prop.getProperty("funding.api"))
-    buildConfigField("FUNDING_KOFI", prop.getProperty("funding.kofi"))
 
     buildConfigField("IOS_TIMER_SHORTCUT_LINK", prop.getProperty("ios.timer.shortcut.link"))
     buildConfigField(

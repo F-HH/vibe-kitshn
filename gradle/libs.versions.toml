@@ -3,7 +3,6 @@ aboutlibraries = "15.2.0"
 accompanist = "0.36.0"
 bugsnag = "0.9.0"
 compose-placeholder = "1.0.12"
-acra = "5.13.1"
 composeWebviewMultiplatform = "2.0.3"
 filekit = "0.16.0"
 humanReadable = "1.13.1"
@@ -51,8 +50,6 @@ ksp = "2.3.6"
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlibraries" }
 aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutlibraries" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
-acra-dialog = { module = "ch.acra:acra-dialog", version.ref = "acra" }
-acra-http = { module = "ch.acra:acra-http", version.ref = "acra" }
 adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "compose-material3-adaptive" }
 adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "compose-material3-adaptive" }
 adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "compose-material3-adaptive" }

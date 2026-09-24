@@ -41,8 +41,8 @@ import de.kitshn.BackHandler
 import de.kitshn.ui.IOSBackGestureHandler
 import de.kitshn.ui.state.rememberForeverListDetailPaneScaffoldNavigation
 import kitshn.shared.generated.resources.Res
-import kitshn.shared.generated.resources.app_name
 import kitshn.shared.generated.resources.ic_logo
+import kitshn.shared.generated.resources.private_app_name
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -227,7 +227,7 @@ fun KitshnListDetailPaneScaffold(
                                     .width(64.dp)
                                     .alpha(0.3f),
                                 painter = painterResource(Res.drawable.ic_logo),
-                                contentDescription = stringResource(Res.string.app_name)
+                                contentDescription = stringResource(Res.string.private_app_name)
                             )
                         }
                     }

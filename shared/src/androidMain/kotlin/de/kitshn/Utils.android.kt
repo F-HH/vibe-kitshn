@@ -24,7 +24,6 @@ import kitshn.shared.generated.resources.Res
 import kitshn.shared.generated.resources.recipe_step_timer_created
 import kitshn.shared.generated.resources.recipe_step_timer_error_no_app
 import kotlinx.coroutines.launch
-import org.acra.ACRA
 import org.jetbrains.compose.resources.getString
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -43,7 +42,6 @@ fun getDialogWindow(): Window? = (LocalView.current.parent as? DialogWindowProvi
 fun getActivityWindow(): Window? = LocalView.current.context.getActivityWindow()
 
 actual fun saveBreadcrumb(key: String, value: String) {
-    ACRA.errorReporter.putCustomData(key, value)
 }
 
 @Composable

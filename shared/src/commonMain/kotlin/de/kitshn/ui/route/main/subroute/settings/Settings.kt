@@ -35,7 +35,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import de.kitshn.Platforms
 import de.kitshn.crash.crashReportHandler
-import de.kitshn.launchWebsiteHandler
 import de.kitshn.model.SettingsBaseModel
 import de.kitshn.model.SettingsDividerModel
 import de.kitshn.model.SettingsItemModel
@@ -50,14 +49,11 @@ import de.kitshn.ui.view.settings.ViewSettingsAppearance
 import de.kitshn.ui.view.settings.ViewSettingsBehavior
 import de.kitshn.ui.view.settings.ViewSettingsDebug
 import de.kitshn.ui.view.settings.ViewSettingsServer
-import kitshn.shared.BuildConfig
 import kitshn.shared.generated.resources.Res
 import kitshn.shared.generated.resources.common_error_report
 import kitshn.shared.generated.resources.ios_support_badge
 import kitshn.shared.generated.resources.ios_support_manage_subscription_description
 import kitshn.shared.generated.resources.ios_support_manage_subscription_label
-import kitshn.shared.generated.resources.kofi_support_description
-import kitshn.shared.generated.resources.kofi_support_label
 import kitshn.shared.generated.resources.navigation_settings
 import kitshn.shared.generated.resources.settings_section_about_description
 import kitshn.shared.generated.resources.settings_section_about_label
@@ -92,8 +88,6 @@ fun RouteMainSubrouteSettings(
     }
 
     val crashReportHandler = crashReportHandler()
-    val launchWebsiteHandler = launchWebsiteHandler()
-
     LaunchedEffect(Unit) {
         settingsModelList.addAll(listOf(
             SettingsItemModel(
@@ -212,17 +206,6 @@ fun RouteMainSubrouteSettings(
                         contentDescription = stringResource(Res.string.ios_support_manage_subscription_description)
                     ) {
                         p.vm.navigateTo("iOS/manageSubscription")
-                    }
-                } else {
-                    SettingsListItem(
-                        position = SettingsListItemPosition.SINGULAR,
-                        modifier = Modifier.padding(16.dp),
-                        icon = Icons.Rounded.Diamond,
-                        label = { Text(stringResource(Res.string.kofi_support_label)) },
-                        description = { Text(stringResource(Res.string.kofi_support_description)) },
-                        contentDescription = stringResource(Res.string.kofi_support_description)
-                    ) {
-                        launchWebsiteHandler(BuildConfig.FUNDING_KOFI)
                     }
                 }
             }
