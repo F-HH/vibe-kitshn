@@ -1002,7 +1002,6 @@ fun ViewRecipeDetails(
                     )
                     .fillMaxWidth(),
                 recipe = recipe,
-                servingsFactor = servingsFactor,
                 prependContent = {
                     HorizontalDivider(
                         Modifier.padding(

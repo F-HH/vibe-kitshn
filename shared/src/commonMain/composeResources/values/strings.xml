@@ -192,6 +192,7 @@
     <string name="common_reachable">Reachable</string>
     <string name="common_recipe">Recipe</string>
     <string name="common_recipe_url">Recipe URL</string>
+    <string name="recipe_nutrition_per_100_g">Nutrition per 100 g</string>
     <string name="common_review">Review</string>
     <string name="common_search">Search</string>
     <string name="common_select">Select</string>

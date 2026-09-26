@@ -5,48 +5,42 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Fastfood
-import androidx.compose.material.icons.rounded.Receipt
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MultiChoiceSegmentedButtonRow
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import de.kitshn.api.tandoor.model.TandoorFoodProperty
 import de.kitshn.api.tandoor.model.recipe.TandoorRecipe
-import de.kitshn.api.tandoor.model.recipe.TandoorRecipeProperty
 import de.kitshn.formatAmount
 import de.kitshn.ui.theme.Typography
 import kitshn.shared.generated.resources.Res
-import kitshn.shared.generated.resources.common_ingredients
-import kitshn.shared.generated.resources.common_per_serving
-import kitshn.shared.generated.resources.common_properties
-import kitshn.shared.generated.resources.common_recipe
-import kitshn.shared.generated.resources.common_total
+import kitshn.shared.generated.resources.recipe_nutrition_per_100_g
 import org.jetbrains.compose.resources.stringResource
+
+internal data class RecipePropertyRow(
+    val name: String,
+    val value: String,
+    val unit: String
+)
+
+internal fun TandoorRecipe.getRecipePropertyRows(
+    showFractionalValues: Boolean
+): List<RecipePropertyRow> = getRelevantRecipeProperties()
+    .sortedBy { it.property_type.order }
+    .map {
+        RecipePropertyRow(
+            name = it.property_type.name,
+            value = it.property_amount.formatAmount(showFractionalValues).ifBlank { "—" },
+            unit = it.property_type.unit.orEmpty()
+        )
+    }
 
 @Composable
 fun RecipePropertiesCard(
@@ -55,28 +49,14 @@ fun RecipePropertiesCard(
     interactionSource: MutableInteractionSource? = null,
     colors: CardColors = CardDefaults.cardColors(),
     recipe: TandoorRecipe? = null,
-    servingsFactor: Double? = 1.0,
     showFractionalValues: Boolean,
     prependContent: @Composable () -> Unit = { }
 ) {
     if(recipe == null) return
 
-    val foodProperties = remember { mutableStateListOf<TandoorFoodProperty>() }
-    val recipeProperties = remember { mutableStateListOf<TandoorRecipeProperty>() }
+    val propertyRows = recipe.getRecipePropertyRows(showFractionalValues)
 
-    LaunchedEffect(recipe) {
-        foodProperties.clear()
-        foodProperties.addAll(recipe.getRelevantFoodProperties())
-        foodProperties.sortBy { it.order }
-
-        recipeProperties.clear()
-        recipeProperties.addAll(recipe.getRelevantRecipeProperties())
-        recipeProperties.sortBy { it.property_type.order }
-    }
-
-    if(foodProperties.size == 0 && recipeProperties.size == 0) return
-
-    var showFoodProperties by rememberSaveable { mutableStateOf(true) }
+    if(propertyRows.isEmpty()) return
 
     prependContent()
 
@@ -92,31 +72,15 @@ fun RecipePropertiesCard(
             Text(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
-                text = stringResource(Res.string.common_properties),
+                text = stringResource(Res.string.recipe_nutrition_per_100_g),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 style = Typography().titleLarge
             )
 
-            if(foodProperties.size > 0 && recipeProperties.size > 0) {
-                Box(
-                    Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    RecipePropertiesCardFoodRecipeToggle(
-                        foodActive = showFoodProperties
-                    ) {
-                        showFoodProperties = it
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
-            }
-
             @Composable
             fun TableTextBox(
                 text: String,
-                bold: Boolean = false,
                 weight: Float,
                 contentAlignment: Alignment = Alignment.CenterEnd
             ) {
@@ -133,10 +97,6 @@ fun RecipePropertiesCard(
                     Text(
                         text = text,
                         Modifier.basicMarquee(),
-                        fontWeight = when(bold) {
-                            true -> FontWeight.Bold
-                            else -> FontWeight.Normal
-                        },
                         maxLines = 1
                     )
                 }
@@ -145,154 +105,31 @@ fun RecipePropertiesCard(
             Column(
                 Modifier.fillMaxWidth()
             ) {
-                Row(
-                    Modifier.fillMaxWidth()
-                ) {
-                    TableTextBox(
-                        text = "",
-                        weight = 0.4f
-                    )
+                propertyRows.forEach {
+                    HorizontalDivider()
 
-                    TableTextBox(
-                        text = stringResource(Res.string.common_per_serving),
-                        bold = true,
-                        weight = 0.3f
-                    )
+                    Row(
+                        Modifier.fillMaxWidth()
+                    ) {
+                        TableTextBox(
+                            text = it.name,
+                            weight = 0.6f,
+                            contentAlignment = Alignment.CenterStart
+                        )
 
-                    TableTextBox(
-                        text = stringResource(Res.string.common_total),
-                        bold = true,
-                        weight = 0.15f
-                    )
+                        TableTextBox(
+                            text = it.value,
+                            weight = 0.25f
+                        )
 
-                    TableTextBox(
-                        text = "",
-                        weight = 0.15f
-                    )
-                }
-
-                if(
-                    foodProperties.size > 0 && (
-                            recipeProperties.size == 0
-                                    || showFoodProperties
-                            )
-                ) {
-                    foodProperties.forEach {
-                        HorizontalDivider()
-
-                        Row(
-                            Modifier.fillMaxWidth()
-                        ) {
-                            TableTextBox(
-                                text = it.name,
-                                weight = 0.4f,
-                                contentAlignment = Alignment.CenterStart
-                            )
-
-                            TableTextBox(
-                                text = (it.total_value / recipe.servings).formatAmount(
-                                    showFractionalValues
-                                )
-                                    .ifBlank { "—" },
-                                weight = 0.3f
-                            )
-
-                            TableTextBox(
-                                text = (it.total_value * (servingsFactor ?: 1.0)).formatAmount(
-                                    showFractionalValues
-                                )
-                                    .ifBlank { "—" },
-                                weight = 0.15f
-                            )
-
-                            TableTextBox(
-                                text = it.unit ?: "",
-                                weight = 0.15f,
-                                contentAlignment = Alignment.CenterStart
-                            )
-                        }
-                    }
-                } else {
-                    recipeProperties.forEach {
-                        HorizontalDivider()
-
-                        Row(
-                            Modifier.fillMaxWidth()
-                        ) {
-                            TableTextBox(
-                                text = it.property_type.name,
-                                weight = 0.4f,
-                                contentAlignment = Alignment.CenterStart
-                            )
-
-                            TableTextBox(
-                                text = (it.property_amount).formatAmount(showFractionalValues)
-                                    .ifBlank { "—" },
-                                weight = 0.3f
-                            )
-
-                            TableTextBox(
-                                text = (it.property_amount * (servingsFactor
-                                    ?: 1.0) * recipe.servings).formatAmount(showFractionalValues)
-                                    .ifBlank { "—" },
-                                weight = 0.15f
-                            )
-
-                            TableTextBox(
-                                text = it.property_type.unit ?: "",
-                                weight = 0.15f,
-                                contentAlignment = Alignment.CenterStart
-                            )
-                        }
+                        TableTextBox(
+                            text = it.unit,
+                            weight = 0.15f,
+                            contentAlignment = Alignment.CenterStart
+                        )
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun RecipePropertiesCardFoodRecipeToggle(
-    foodActive: Boolean,
-    onActiveChanged: (foodActive: Boolean) -> Unit
-) {
-    MultiChoiceSegmentedButtonRow {
-        SegmentedButton(
-            shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
-            icon = {
-                SegmentedButtonDefaults.Icon(active = foodActive) {
-                    Icon(
-                        imageVector = Icons.Rounded.Fastfood,
-                        contentDescription = null,
-                        modifier = Modifier.size(SegmentedButtonDefaults.IconSize)
-                    )
-                }
-            },
-            onCheckedChange = {
-                onActiveChanged(it)
-            },
-            checked = foodActive
-        ) {
-            Text(stringResource(Res.string.common_ingredients))
-        }
-
-        SegmentedButton(
-            shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
-            icon = {
-                SegmentedButtonDefaults.Icon(active = !foodActive) {
-                    Icon(
-                        imageVector = Icons.Rounded.Receipt,
-                        contentDescription = null,
-                        modifier = Modifier.size(SegmentedButtonDefaults.IconSize)
-                    )
-                }
-            },
-            onCheckedChange = {
-                onActiveChanged(!it)
-            },
-            checked = !foodActive
-        ) {
-            Text(stringResource(Res.string.common_recipe))
         }
     }
 }
